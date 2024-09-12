@@ -17,5 +17,6 @@ func RegisterUserRoutes(router *gin.Engine, db *gorm.DB) {
 	userGroup := router.Group("/users")
 	{
 		userGroup.POST("/register", userController.RegisterUser)
+		userGroup.POST("/login", userController.LoginUser)
 	}
 }
