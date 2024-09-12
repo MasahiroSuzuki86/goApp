@@ -1,13 +1,16 @@
 package config
 
-import "os"
+import (
+	"os"
+)
 
 type ConfigList struct {
 	DB_USER     string
 	DB_PASSWORD string
-	DB_NAME     string
 	DB_HOST     string
 	DB_PORT     string
+	DB_NAME     string
+	LOG_FILE    string
 }
 
 var Config ConfigList
@@ -23,5 +26,6 @@ func LoadConfig() {
 		DB_NAME:     os.Getenv("DB_NAME"),
 		DB_HOST:     os.Getenv("DB_HOST"),
 		DB_PORT:     os.Getenv("DB_PORT"),
+		LOG_FILE:    os.Getenv("LOG_FILE"),
 	}
 }
