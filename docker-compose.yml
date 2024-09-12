@@ -16,6 +16,7 @@ services:
       - DB_HOST=db
       - DB_PORT=3306
       - DB_NAME=mydatabase
+      - LOG_FILE=webapp
     command: go run main.go
   db:
     image: mysql:8.0
