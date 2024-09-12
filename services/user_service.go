@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"goApp/models"
 	"goApp/repository"
+	"log"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -30,6 +31,7 @@ func (s *UserService) RegisterUser(username, password string) (*models.User, err
 	// パスワードをハッシュ化
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
+		log.Fatalln(err)
 		return nil, fmt.Errorf("failed to hash password: %w", err)
 	}
 
@@ -41,8 +43,28 @@ func (s *UserService) RegisterUser(username, password string) (*models.User, err
 
 	// ユーザーをデータベースに保存
 	if err := s.Repo.CreateUser(newUser); err != nil {
+		log.Fatalln(err)
 		return nil, fmt.Errorf("failed to register user: %w", err)
 	}
 
 	return newUser, nil
+}
+
+// LoginUser ログインサービス
+func (s *UserService) LoginUser(username, password string) (*models.User, error) {
+	user, err := s.Repo.FindByUsername(username)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find user: %w", err)
+	}
+	if user == nil {
+		return nil, fmt.Errorf("invalid username or password")
+	}
+
+	// パスワードの検証
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil {
+		return nil, fmt.Errorf("invalid username or password")
+	}
+
+	return user, nil
 }

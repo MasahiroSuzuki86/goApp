@@ -1,15 +1,14 @@
 package utils
 
 import (
-	"goApp/config"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
 )
 
-func LoggingSettings(config *config.ConfigList) {
-	logFile := config.LOG_FILE + ".log"
+func LoggingSettings(logFile string) {
+	logFile = logFile + ".log"
 	// ディレクトリを作成（存在しない場合）
 	dir := filepath.Dir(logFile)
 	if _, err := os.Stat(dir); os.IsNotExist(err) {

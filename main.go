@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	utils.LoggingSettings(&config.Config)
+	utils.LoggingSettings("webapp")
 	db := repository.Connect(&config.Config)
 	router := gin.Default()
 	routes.RegisterUserRoutes(router, db)
