@@ -31,7 +31,7 @@ func (s *UserService) RegisterUser(username, password string) (*models.User, err
 	// パスワードをハッシュ化
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 		return nil, fmt.Errorf("failed to hash password: %w", err)
 	}
 
@@ -43,7 +43,7 @@ func (s *UserService) RegisterUser(username, password string) (*models.User, err
 
 	// ユーザーをデータベースに保存
 	if err := s.Repo.CreateUser(newUser); err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 		return nil, fmt.Errorf("failed to register user: %w", err)
 	}
 

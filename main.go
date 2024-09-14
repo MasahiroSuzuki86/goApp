@@ -14,5 +14,6 @@ func main() {
 	db := repository.Connect(&config.Config)
 	router := gin.Default()
 	routes.RegisterUserRoutes(router, db)
+	routes.RegisterTodoRoutes(router, db)
 	router.Run(":8080")
 }
