@@ -24,9 +24,17 @@ func Connect(config *config.ConfigList) *gorm.DB {
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Failed to connect to database: ", err)
+		log.Println("Failed to connect to database: ", err)
 	}
 
-	db.AutoMigrate(&models.User{})
+	userErr := db.AutoMigrate(&models.User{})
+	if err != nil {
+		log.Println("Failed to AutoMigrate: ", userErr)
+	}
+	toDoErr := db.AutoMigrate(&models.Todo{})
+	if err != nil {
+		log.Println("Failed to AutoMigrate: ", toDoErr)
+	}
+
 	return db
 }

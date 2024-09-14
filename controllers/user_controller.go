@@ -33,6 +33,7 @@ type LoginUserRequest struct {
 func (ctrl *UserController) RegisterUser(c *gin.Context) {
 	var req RegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
+		log.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
 	}
@@ -40,6 +41,7 @@ func (ctrl *UserController) RegisterUser(c *gin.Context) {
 	// サービスを使ってユーザーを登録
 	_, err := ctrl.Service.RegisterUser(req.Username, req.Password)
 	if err != nil {
+		log.Println(err)
 		if err.Error() == "username already exists" {
 			c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 		} else {

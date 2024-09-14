@@ -25,3 +25,13 @@ func (repo *UserRepository) FindByUsername(username string) (*models.User, error
 	err := repo.DB.Where("username = ?", username).First(&user).Error
 	return &user, err
 }
+
+// ユーザーのパスワードを変更する
+func (repo *UserRepository) UpdatePassword(username string, newPassword string) error {
+	return repo.DB.Model(&models.User{}).Where("username = ?", username).Update("password", newPassword).Error
+}
+
+// ユーザーを削除する
+func (repo *UserRepository) DeleteUser(username string) error {
+	return repo.DB.Where("username = ?", username).Delete(&models.User{}).Error
+}
