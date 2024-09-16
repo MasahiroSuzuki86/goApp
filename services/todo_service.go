@@ -16,7 +16,7 @@ func NewTodoService(repo *repository.TodoRepository) *TodoService {
 }
 
 // RegisterTodo Todo登録サービス
-func (s *TodoService) RegisterTodo(user_id uint, content string) (*models.Todo, error) {
+func (s *TodoService) RegisterTodo(user_id string, content string) (*models.Todo, error) {
 	newTodo := &models.Todo{
 		Content: content,
 		UserID:  user_id,
@@ -30,4 +30,15 @@ func (s *TodoService) RegisterTodo(user_id uint, content string) (*models.Todo, 
 	}
 
 	return newTodo, nil
+}
+
+func (s *TodoService) SearchTodo(userId string) ([]models.Todo, error) {
+	todos, err := s.Repo.FindByUserId(userId)
+	if err != nil {
+		log.Println(err)
+	} else if len(todos) == 0 {
+		return nil, fmt.Errorf("No todos found")
+	}
+
+	return todos, nil
 }

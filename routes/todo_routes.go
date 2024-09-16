@@ -17,5 +17,6 @@ func RegisterTodoRoutes(router *gin.Engine, db *gorm.DB) {
 	todoGroup := router.Group("/todo")
 	{
 		todoGroup.POST("/register", todoController.RegisterTodo)
+		todoGroup.POST("/search", todoController.SearchTodo)
 	}
 }
