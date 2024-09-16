@@ -17,8 +17,12 @@ func NewTodoController(service *services.TodoService) *TodoController {
 }
 
 type TodoRegisterRequest struct {
-	UserId  uint   `json:"userid" binding:"required"`
+	UserId  string `json:"userid" binding:"required"`
 	Content string `json:"content" binding:"required"`
+}
+
+type TodoSearchRequest struct {
+	UserId string `json:"userid" binding:"required"`
 }
 
 func (ctrl *TodoController) RegisterTodo(c *gin.Context) {
@@ -37,4 +41,28 @@ func (ctrl *TodoController) RegisterTodo(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Todo registered successfully"})
+}
+
+func (ctrl *TodoController) SearchTodo(c *gin.Context) {
+	var req TodoSearchRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		log.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+
+	todos, err := ctrl.Service.SearchTodo(req.UserId)
+	if err != nil {
+		log.Println("Error retrieving todos:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if len(todos) == 0 {
+		log.Println("No todos found for user_id:", req.UserId)
+		c.JSON(http.StatusNotFound, gin.H{"message": "No todos found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"todos": todos})
 }
