@@ -25,3 +25,12 @@ func (repo *TodoRepository) FindByUserId(userId string) ([]models.Todo, error) {
 	err := repo.DB.Where("user_id = ?", userId).Find(&todos).Error
 	return todos, err
 }
+
+func (repo *TodoRepository) UpdateTodo(todo *models.Todo) (err error) {
+	var existingTodo models.Todo
+	if err := repo.DB.First(&existingTodo, todo.ID).Error; err != nil {
+		return err
+	}
+
+	return repo.DB.Model(&existingTodo).Updates(todo).Error
+}

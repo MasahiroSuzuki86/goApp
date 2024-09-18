@@ -18,5 +18,6 @@ func RegisterTodoRoutes(router *gin.Engine, db *gorm.DB) {
 	{
 		todoGroup.POST("/register", todoController.RegisterTodo)
 		todoGroup.POST("/search", todoController.SearchTodo)
+		todoGroup.POST("/update", todoController.UpdateTodo)
 	}
 }
