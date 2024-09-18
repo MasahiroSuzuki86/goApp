@@ -5,6 +5,9 @@ import (
 	"goApp/models"
 	"goApp/repository"
 	"log"
+	"strconv"
+
+	"gorm.io/gorm"
 )
 
 type TodoService struct {
@@ -32,6 +35,7 @@ func (s *TodoService) RegisterTodo(user_id string, content string) (*models.Todo
 	return newTodo, nil
 }
 
+// ユーザーIDでtodo一覧を取得する
 func (s *TodoService) SearchTodo(userId string) ([]models.Todo, error) {
 	todos, err := s.Repo.FindByUserId(userId)
 	if err != nil {
@@ -41,4 +45,29 @@ func (s *TodoService) SearchTodo(userId string) ([]models.Todo, error) {
 	}
 
 	return todos, nil
+}
+
+// todoを更新する
+func (s *TodoService) UpdateTodo(todoId, content string) error {
+
+	todoIdUint, err := strconv.ParseUint(todoId, 10, 32)
+	if err != nil {
+		fmt.Println("Conversion failed:", err)
+		return err
+	}
+
+	updateTodo := &models.Todo{
+		Model: gorm.Model{
+			ID: uint(todoIdUint),
+		},
+		Content: content,
+	}
+
+	DBErr := s.Repo.UpdateTodo(updateTodo)
+	if DBErr != nil {
+		log.Println("Update failed:", DBErr)
+		return DBErr
+	}
+
+	return nil
 }
